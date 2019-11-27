@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 3.10)
 project(
     MineSweeper
-    LANGUAGE C
+    LANGUAGES C
 )
 set(CMAKE_C_STANDARD 11)
 
@@ -11,5 +11,7 @@ include_directories(include)
 aux_source_directory(src SourceDir)
 
 add_executable(MineSweeper ${SourceDir})
-target_include_directories(${CursesIncludeDir})
-target_link_libraries(${CursesLib})
+target_include_directories(MineSweeper
+    PRIVATE ${CursesIncludeDir}
+)
+target_link_libraries(MineSweeper ${CursesLib})
