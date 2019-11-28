@@ -15,3 +15,8 @@ target_include_directories(MineSweeper
     PRIVATE ${CursesIncludeDir}
 )
 target_link_libraries(MineSweeper ${CursesLib})
+if(UsePDCurses)
+    target_compile_definitions(MineSweeper
+        PRIVATE USE_PDCURSES
+    )
+endif()
