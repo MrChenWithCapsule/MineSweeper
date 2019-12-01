@@ -1,3 +1,6 @@
 [submodule "lib/PDCurses"]
 	path = lib/PDCurses
 	url = https://github.com/MrChenWithCapsule/PDCurses
+[submodule "lib/pthreads4w"]
+	path = lib/pthreads4w
+	url = https://github.com/MrChenWithCapsule/pthreads4w
