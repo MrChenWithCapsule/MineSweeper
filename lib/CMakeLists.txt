@@ -14,3 +14,11 @@ else()
     set(CursesIncludeDir "")
     set(UsePDCurses OFF)
 endif()
+
+# Use bundled pthread on Windows, otherwise system pthread
+if(WIN32)
+else()
+    find_library(PthreadLib "pthread")
+    set(PthreadIncludeDir "")
+    set(UseSystemPthread ON)
+endif()

@@ -77,6 +77,8 @@ void game_run()
         tui_delete_element(image_id);
         tui_delete_element(button_id);
         tui_unlock();
+        delete_buffer(start_image.buf, 12);
+        delete_buffer(start_button.buf, 1);
     }
 
     // Choose mode

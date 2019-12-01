@@ -4,6 +4,6 @@
 #include "CursesWrapper.h"
 
 chtype **make_buffer(int row, int column);
-void delete_buffer(int column);
+void delete_buffer(chtype **buf, int row);
 
 #endif
