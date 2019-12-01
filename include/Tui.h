@@ -10,7 +10,7 @@ typedef struct Position
     int column;
 } Position;
 
-void tui_init();
+void *tui_init(void *);
 void tui_end();
 
 // Add an element in the window, return its id.
@@ -23,5 +23,8 @@ void tui_delete_element(int element_id);
 
 // Find the element at pos, return its id.
 int tui_find_element(Position pos);
+
+void tui_lock();
+void tui_release();
 
 #endif

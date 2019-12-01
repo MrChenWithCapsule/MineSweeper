@@ -6,6 +6,6 @@
 
 void game_start();
 void game_user_input();
-int game_run();
+int game_at_exit();
 
 #endif
