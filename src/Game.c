@@ -23,7 +23,7 @@ char image1[][48] = {"             ___  ___ _                         ",
                      " _____       | |  | || || | | ||  __/           ",
                      "/  ___|      \\_|  |_/|_||_| |_| \\___|           ",
                      "\\ `--. __      __  ___   ___  _ __    ___  _ __ ",
-                     " `--. \\ \\ /\\ / / / _ \\ / _ \\| '_ \\  / _ \\| '__|",
+                     " `--. \\\\ \\ /\\ / / / _ \\ / _ \\| '_ \\  / _ \\| '__|",
                      "/\\__/ / \\ V  V / |  __/|  __/| |_) ||  __/| |   ",
                      "\\____/   \\_/\\_/   \\___| \\___|| .__/  \\___||_|   ",
                      "                             | |                ",
@@ -33,6 +33,7 @@ char image2[19] = "PRESS HERE TO START";
 // Height: 1x4, Width: 24
 char image3[][24] = {"Choose mode:            ", "Easy (8x8, 10 Mines)    ",
                      "Medium (16x16, 40 Mines)", "Expert (30x16, 99 Mines)"};
+// Height: 1*2, Width: 8
 char image4[][8] = {"You Win ", "You Lose"};
 
 int expand(chtype **broad, int y, int x);
@@ -86,7 +87,8 @@ void game_run()
     }
 
     // Choose mode
-    int broad_row, broad_col;
+    int broad_row;
+    int broad_col;
     {
         int base_y = (scr_row - 4) / 2;
         int base_x = (scr_col - 24) / 2;
@@ -122,13 +124,13 @@ void game_run()
                 broad_col = 9;
                 break;
             }
-            else if (id == buttons_id[2])
+            if (id == buttons_id[2])
             {
                 broad_row = 16;
                 broad_col = 16;
                 break;
             }
-            else if (id == buttons_id[3])
+            if (id == buttons_id[3])
             {
                 broad_row = 16;
                 broad_col = 30;
@@ -248,17 +250,31 @@ int expand(chtype **broad, int y, int x)
     if (broad[y][x] != ' ')
         return 1;
     chtype ch;
+    ch = broad[y - 1][x - 1] & 255;
+    if (((ch >= '1' && ch <= '9') || ch == ' ') && ch != broad[y - 1][x - 1])
+        count += expand(broad, y - 1, x - 1);
     ch = broad[y - 1][x] & 255;
     if (((ch >= '1' && ch <= '9') || ch == ' ') && ch != broad[y - 1][x])
         count += expand(broad, y - 1, x);
+    ch = broad[y - 1][x + 1] & 255;
+    if (((ch >= '1' && ch <= '9') || ch == ' ') && ch != broad[y - 1][x + 1])
+        count += expand(broad, y - 1, x + 1);
+
     ch = broad[y][x - 1] & 255;
     if (((ch >= '1' && ch <= '9') || ch == ' ') && ch != broad[y][x - 1])
         count += expand(broad, y, x - 1);
-    ch = broad[y + 1][x] & 255;
-    if (((ch >= '1' && ch <= '9') || ch == ' ') && ch != broad[y + 1][x])
-        count += expand(broad, y + 1, x);
     ch = broad[y][x + 1] & 255;
     if (((ch >= '1' && ch <= '9') || ch == ' ') && ch != broad[y][x + 1])
         count += expand(broad, y, x + 1);
+
+    ch = broad[y + 1][x - 1] & 255;
+    if (((ch >= '1' && ch <= '9') || ch == ' ') && ch != broad[y + 1][x - 1])
+        count += expand(broad, y + 1, x - 1);
+    ch = broad[y + 1][x] & 255;
+    if (((ch >= '1' && ch <= '9') || ch == ' ') && ch != broad[y + 1][x])
+        count += expand(broad, y + 1, x);
+    ch = broad[y + 1][x + 1] & 255;
+    if (((ch >= '1' && ch <= '9') || ch == ' ') && ch != broad[y + 1][x + 1])
+        count += expand(broad, y + 1, x + 1);
     return count;
 }
