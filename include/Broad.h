@@ -12,6 +12,6 @@ typedef struct BroadType
 } Broad;
 
 Broad broad_create(int row, int column);
-Broad broad_delete(Broad broad);
+void broad_delete(Broad broad);
 
 #endif

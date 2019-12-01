@@ -1,8 +1,3 @@
-#ifdef USE_PDCURSES
-#include <pdcurses.h>
-#else
-#include <curses.h>
-#endif
 #include <pthread.h>
 
 #include "Game.h"
@@ -11,7 +6,7 @@
 int main()
 {
     pthread_t tui_thrd;
-    pthread_create(&tui_thrd, NULL, &tui_init, NULL);
+    pthread_create(&tui_thrd, NULL, &tui_run, NULL);
     game_start();
 
     while (!game_at_exit())
