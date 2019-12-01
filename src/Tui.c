@@ -1,12 +1,9 @@
-#ifdef USE_PDCURSES
-#include <pdcurses.h>
-#else
 #include <curses.h>
-#endif
 #include <pthread.h>
 #include <stdlib.h>
 #include <time.h>
 
+#include "CursesWrapper.h"
 #include "Sleep.h"
 #include "Tui.h"
 
@@ -23,7 +20,7 @@ ElementList *begin, *current;
 int curr_id;
 pthread_mutex_t display_lock = PTHREAD_MUTEX_INITIALIZER;
 
-int status;
+int status = 0;
 pthread_mutex_t status_lock = PTHREAD_MUTEX_INITIALIZER;
 
 void tui_routine();
@@ -32,8 +29,9 @@ void *tui_run(void *_)
 {
     initscr();
     cbreak();
-    noecho();
+    // noecho();
     keypad(stdscr, true);
+    mousemask(ALL_MOUSE_EVENTS, NULL);
     pthread_mutex_lock(&display_lock);
     pthread_mutex_lock(&status_lock);
     status = 1;
@@ -116,24 +114,36 @@ void tui_unlock()
     pthread_mutex_unlock(&display_lock);
 }
 
+int tui_ready()
+{
+    pthread_mutex_lock(&status_lock);
+    int ready = status;
+    pthread_mutex_unlock(&status_lock);
+    return ready;
+}
+
 void tui_routine()
 {
     while (1)
     {
+        clear();
+        int cury;
+        int curx;
+        getyx(stdscr, cury, curx);
         pthread_mutex_lock(&display_lock);
         pthread_mutex_lock(&status_lock);
         if (status == 0)
             break;
-        clear();
         for (ElementList *p = begin->next; p != NULL; p = p->next)
         {
             for (int i = 0; i <= p->low_r.row - p->up_l.row; ++i)
                 for (int j = 0; j <= p->low_r.column - p->up_l.column; ++j)
                     mvaddch(p->up_l.row + i, p->up_l.column + j, p->buf[i][j]);
         }
-        refresh();
         pthread_mutex_unlock(&status_lock);
         pthread_mutex_unlock(&display_lock);
+        move(cury, curx);
+        refresh();
         usleep(100);
     }
 }

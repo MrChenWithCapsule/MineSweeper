@@ -4,7 +4,7 @@
 #ifndef MINESWEEPER_TUI_H
 #define MINESWEEPER_TUI_H
 
-#include <curses.h>
+#include "CursesWrapper.h"
 typedef struct Position
 {
     int row;
@@ -27,5 +27,7 @@ int tui_find_element(Position pos);
 
 void tui_lock();
 void tui_unlock();
+
+int tui_ready();
 
 #endif
