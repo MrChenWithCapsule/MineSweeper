@@ -38,7 +38,7 @@ void *tui_run(void *_)
     begin = current = malloc(sizeof(ElementList));
     curr_id = 0;
     pthread_mutex_unlock(&status_lock);
-    pthread_mutex_lock(&display_lock);
+    pthread_mutex_unlock(&display_lock);
     tui_routine();
     pthread_mutex_destroy(&display_lock);
     pthread_mutex_destroy(&status_lock);
@@ -58,7 +58,7 @@ void tui_end()
     }
     begin = current = NULL;
     pthread_mutex_unlock(&status_lock);
-    pthread_mutex_lock(&display_lock);
+    pthread_mutex_unlock(&display_lock);
     endwin();
 }
 
@@ -80,10 +80,12 @@ int tui_add_element(Position upper_left, Position lower_right, chtype **buffer)
 void tui_delete_element(int element_id)
 {
     pthread_mutex_lock(&display_lock);
-    for (ElementList *p = begin; p->next != NULL; p = p->next)
+    for (ElementList *p = begin; p != NULL && p->next != NULL; p = p->next)
     {
         if (p->next->id == element_id)
         {
+            if (p->next == current)
+                current = p;
             ElementList *tmp = p->next;
             p->next = tmp->next;
             free(tmp);
@@ -137,8 +139,10 @@ void tui_routine()
         for (ElementList *p = begin->next; p != NULL; p = p->next)
         {
             for (int i = 0; i <= p->low_r.row - p->up_l.row; ++i)
-                for (int j = 0; j <= p->low_r.column - p->up_l.column; ++j)
-                    mvaddch(p->up_l.row + i, p->up_l.column + j, p->buf[i][j]);
+                mvaddchnstr(p->up_l.row + i, p->up_l.column, p->buf[i],
+                            p->low_r.column - p->up_l.column + 1);
+            // for (int j = 0; j <= p->low_r.column - p->up_l.column; ++j)
+            //     mvaddch(p->up_l.row + i, p->up_l.column + j, p->buf[i][j]);
         }
         pthread_mutex_unlock(&status_lock);
         pthread_mutex_unlock(&display_lock);
