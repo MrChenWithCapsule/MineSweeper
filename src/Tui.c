@@ -142,13 +142,11 @@ void tui_routine()
             for (int i = 0; i <= p->low_r.row - p->up_l.row; ++i)
                 mvaddchnstr(p->up_l.row + i, p->up_l.column, p->buf[i],
                             p->low_r.column - p->up_l.column + 1);
-            // for (int j = 0; j <= p->low_r.column - p->up_l.column; ++j)
-            //     mvaddch(p->up_l.row + i, p->up_l.column + j, p->buf[i][j]);
         }
         pthread_mutex_unlock(&status_lock);
         pthread_mutex_unlock(&display_lock);
         move(cury, curx);
         refresh();
-        usleep(100);
+        usleep(10000);
     }
 }

@@ -235,8 +235,14 @@ void game_run()
         for (int j = 0; j < 8; ++j)
             message[0][j] = (status == 1 ? image4[1][j] : image4[0][j]);
         int message_id = tui_add_element(
-            (Position){scr_row / 2, (scr_col - 8) / 2},
-            (Position){scr_row / 2, (scr_col - 8) / 2 + 8}, message);
+            (Position){base_row + broad_row + 2, (scr_col - 8) / 2},
+            (Position){base_row + broad_row + 2, (scr_col - 8) / 2 + 8},
+            message);
+        tui_lock();
+        for (int i = 1; i < broad_row + 1; ++i)
+            for (int j = 1; j < broad_col + 1; ++j)
+                broad[i][j] &= 255;
+        tui_unlock();
         getch();
         tui_delete_element(message_id);
         tui_delete_element(broad_id);
