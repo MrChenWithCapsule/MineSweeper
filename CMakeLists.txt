@@ -11,14 +11,13 @@ include_directories(include)
 aux_source_directory(src SourceDir)
 
 add_executable(MineSweeper ${SourceDir})
-target_include_directories(MineSweeper
-    PRIVATE ${CursesIncludeDir}
-    PRIVATE ${PthtreadIncludeDir}
+target_include_directories(MineSweeper SYSTEM PRIVATE
+    ${CursesIncludeDir} ${PthreadIncludeDir}
 )
 target_link_libraries(MineSweeper ${CursesLib} ${PthreadLib})
 if(UsePDCurses)
     target_compile_definitions(MineSweeper
-        PRIVATE USE_PDCURSES
+        PRIVATE USE_PDCURSES NCURSES_MOUSE_VERSION
     )
 endif()
 if(UseSystemPthread)

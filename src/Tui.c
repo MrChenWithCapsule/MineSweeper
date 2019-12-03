@@ -30,7 +30,7 @@ void *tui_run(void *_)
     initscr();
     cbreak();
     // noecho();
-    keypad(stdscr, true);
+    keypad(stdscr, 1);
     mousemask(ALL_MOUSE_EVENTS, NULL);
     start_color();
     pthread_mutex_lock(&display_lock);
