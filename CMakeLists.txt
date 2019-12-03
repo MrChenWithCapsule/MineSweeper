@@ -25,3 +25,4 @@ if(UseSystemPthread)
         PRIVATE USE_SYSTEM_PTHREAD
     )
 endif()
+add_dependencies(MineSweeper PDCurses Pthreads4w)
