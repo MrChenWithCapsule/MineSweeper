@@ -23,7 +23,7 @@ void *clock_start(void *args)
     int clock_id = tui_add_element(
         *upper_left, (Position){upper_left->row, upper_left->column + 10}, buf);
     clock_begin = time(NULL);
-    while (true)
+    while (1)
     {
         pthread_mutex_lock(&clock_status_lock);
         int status_now = clock_started;
