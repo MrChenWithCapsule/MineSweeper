@@ -47,11 +47,14 @@ void game_run()
     {
         while (!tui_ready())
             usleep(100);
-        getmaxyx(stdscr, scr_row, scr_col);
     }
 
     // Startscreen
     {
+        tui_lock();
+        resizeterm(14, 48);
+        getmaxyx(stdscr, scr_row, scr_col);
+        tui_unlock();
         Element start_image = {
             (Position){(scr_row - 14) / 2, (scr_col - 48) / 2},
             (Position){(scr_row - 14) / 2 + 11, (scr_col - 48) / 2 + 47},
@@ -73,7 +76,6 @@ void game_run()
         int ch;
         while (1)
         {
-            ch = getch();
             ch = getch();
             if (ch == KEY_MOUSE && getmouse(&event) == OK &&
                 tui_find_element((Position){event.y, event.x}) == button_id)
@@ -115,7 +117,6 @@ void game_run()
         while (1)
         {
             ch = getch();
-            ch = getch();
             if (ch != KEY_MOUSE || getmouse(&event) != OK)
                 continue;
             int id = tui_find_element((Position){event.y, event.x});
@@ -123,18 +124,30 @@ void game_run()
             {
                 broad_row = 9;
                 broad_col = 9;
+                tui_lock();
+                resizeterm(15, 11);
+                getmaxyx(stdscr, scr_row, scr_col);
+                tui_unlock();
                 break;
             }
             if (id == buttons_id[2])
             {
                 broad_row = 16;
                 broad_col = 16;
+                tui_lock();
+                resizeterm(21, 18);
+                getmaxyx(stdscr, scr_row, scr_col);
+                tui_unlock();
                 break;
             }
             if (id == buttons_id[3])
             {
                 broad_row = 16;
                 broad_col = 30;
+                tui_lock();
+                resizeterm(21, 32);
+                getmaxyx(stdscr, scr_row, scr_col);
+                tui_unlock();
                 break;
             }
         }
@@ -215,7 +228,6 @@ void game_run()
         int ch;
         while (status == 0)
         {
-            ch = getch();
             ch = getch();
             if (ch != KEY_MOUSE)
                 continue;
