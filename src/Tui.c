@@ -140,8 +140,12 @@ void tui_routine()
         for (ElementList *p = begin->next; p != NULL; p = p->next)
         {
             for (int i = 0; i <= p->low_r.row - p->up_l.row; ++i)
+            {
+                if (p->up_l.row < 0 || p->up_l.column < 0)
+                    continue;
                 mvaddchnstr(p->up_l.row + i, p->up_l.column, p->buf[i],
                             p->low_r.column - p->up_l.column + 1);
+            }
         }
         pthread_mutex_unlock(&status_lock);
         pthread_mutex_unlock(&display_lock);
