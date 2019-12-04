@@ -4,6 +4,7 @@
 #include <time.h>
 
 #include "Buffer.h"
+#include "Clock.h"
 #include "CursesWrapper.h"
 #include "Game.h"
 #include "Sleep.h"
@@ -33,8 +34,8 @@ char image2[19] = "PRESS HERE TO START";
 // Height: 1x4, Width: 24
 char image3[][24] = {"Choose mode:            ", "Easy (8x8, 10 Mines)    ",
                      "Medium (16x16, 40 Mines)", "Expert (30x16, 99 Mines)"};
-// Height: 1*2, Width: 8
-char image4[][8] = {"You Win ", "You Lose"};
+// Height: 1*3, Width: 10
+char image4[][10] = {"You Win   ", "You Lose  ", "Time:     "};
 
 int expand(chtype **broad, int y, int x);
 
@@ -205,6 +206,9 @@ void game_run()
             (Position){base_row, base_col},
             (Position){base_row + broad_row + 1, base_col + broad_col + 1},
             broad);
+        Position clock_pos = (Position){base_row + broad_row + 2, base_col};
+        pthread_t clock_thrd;
+        pthread_create(&clock_thrd, NULL, &clock_start, &clock_pos);
         int status = 0;
         int square_left = broad_row * broad_col - mine_n;
         MEVENT event;
@@ -231,12 +235,35 @@ void game_run()
             if (square_left == 0)
                 status = 2;
         }
-        chtype **message = make_buffer(1, 8);
-        for (int j = 0; j < 8; ++j)
-            message[0][j] = (status == 1 ? image4[1][j] : image4[0][j]);
+        int total_time = clock_end();
+        chtype **message = make_buffer(2, 10);
+        if (status == 1)
+        {
+            for (int j = 0; j < 10; ++j)
+            {
+                message[0][j] = image4[1][j];
+                message[1][j] = image4[2][j];
+            }
+            char chbuf[4] = {0};
+            sprintf(chbuf, "%ds", total_time);
+            for (int j = 6; j < 10; ++j)
+                message[1][j] = chbuf[j - 6];
+        }
+        else
+        {
+            for (int j = 0; j < 10; ++j)
+            {
+                message[0][j] = image4[1][j];
+                message[1][j] = image4[2][j];
+            }
+            char chbuf[4] = {0};
+            sprintf(chbuf, "%ds", total_time);
+            for (int j = 6; j < 10; ++j)
+                message[1][j] = chbuf[j - 6];
+        }
         int message_id = tui_add_element(
-            (Position){base_row + broad_row + 2, (scr_col - 8) / 2},
-            (Position){base_row + broad_row + 2, (scr_col - 8) / 2 + 8},
+            (Position){base_row + broad_row + 2, (scr_col - 10) / 2},
+            (Position){base_row + broad_row + 3, (scr_col - 10) / 2 + 9},
             message);
         tui_lock();
         for (int i = 1; i < broad_row + 1; ++i)
