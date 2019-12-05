@@ -21,7 +21,7 @@ void *clock_start(void *args)
     chtype **buf = make_buffer(1, 10);
     char chrbuf[10];
     int clock_id = tui_add_element(
-        *upper_left, (Position){upper_left->row, upper_left->column + 10}, buf);
+        *upper_left, (Position){upper_left->row, upper_left->column + 9}, buf);
     clock_begin = time(NULL);
     while (1)
     {
