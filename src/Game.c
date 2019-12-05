@@ -66,8 +66,12 @@ void game_run()
             (Position){start_image.low_r.row + 2, (scr_col - 19) / 2},
             (Position){start_image.low_r.row + 2, (scr_col - 19) / 2 + 18},
             make_buffer(1, 19)};
+        init_pair(2, COLOR_RED, COLOR_BLACK);
         for (int j = 0; j < 19; ++j)
+        {
             start_button.buf[0][j] = image2[j];
+            start_button.buf[0][j] |= COLOR_PAIR(2);
+        }
         int image_id = tui_add_element(start_image.up_l, start_image.low_r,
                                        start_image.buf);
         int button_id = tui_add_element(start_button.up_l, start_button.low_r,
@@ -222,11 +226,17 @@ void game_run()
         Position clock_pos = (Position){base_row + broad_row + 2, base_col};
         pthread_t clock_thrd;
         pthread_create(&clock_thrd, NULL, &clock_start, &clock_pos);
-        int status = 0;
+        typedef enum GameStatus
+        {
+            game_win,
+            game_lose,
+            game_running
+        } GameStatus;
+        GameStatus status = game_running;
         int square_left = broad_row * broad_col - mine_n;
         MEVENT event;
         int ch;
-        while (status == 0)
+        while (status == game_running)
         {
             ch = getch();
             if (ch != KEY_MOUSE)
@@ -239,17 +249,17 @@ void game_run()
             tui_lock();
             broad[event.y - base_row][event.x - base_col] &= 255;
             if (broad[event.y - base_row][event.x - base_col] == '*')
-                status = 1;
+                status = game_lose;
             else
                 square_left -=
                     expand(broad, event.y - base_row, event.x - base_col);
             tui_unlock();
             if (square_left == 0)
-                status = 2;
+                status = game_win;
         }
         int total_time = clock_end();
         chtype **message = make_buffer(2, 10);
-        if (status == 1)
+        if (status == game_lose)
         {
             for (int j = 0; j < 10; ++j)
             {
@@ -265,7 +275,7 @@ void game_run()
         {
             for (int j = 0; j < 10; ++j)
             {
-                message[0][j] = image4[1][j];
+                message[0][j] = image4[0][j];
                 message[1][j] = image4[2][j];
             }
             char chbuf[4] = {0};
