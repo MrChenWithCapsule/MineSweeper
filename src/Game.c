@@ -54,6 +54,7 @@ void game_run()
         tui_lock();
         resize_term(14, 48);
         getmaxyx(stdscr, scr_row, scr_col);
+        usleep(100000);
         tui_unlock();
         Element start_image = {
             (Position){(scr_row - 14) / 2, (scr_col - 48) / 2},
@@ -131,6 +132,7 @@ void game_run()
                 tui_lock();
                 resize_term(15, 11);
                 getmaxyx(stdscr, scr_row, scr_col);
+                usleep(100000);
                 tui_unlock();
                 break;
             }
@@ -141,6 +143,7 @@ void game_run()
                 tui_lock();
                 resize_term(21, 18);
                 getmaxyx(stdscr, scr_row, scr_col);
+                usleep(100000);
                 tui_unlock();
                 break;
             }
@@ -151,6 +154,7 @@ void game_run()
                 tui_lock();
                 resize_term(21, 32);
                 getmaxyx(stdscr, scr_row, scr_col);
+                usleep(100000);
                 tui_unlock();
                 break;
             }
