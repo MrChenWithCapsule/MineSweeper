@@ -52,7 +52,7 @@ void game_run()
     // Startscreen
     {
         tui_lock();
-        wresize(stdscr, 14, 48);
+        resizeterm(14, 48);
         getmaxyx(stdscr, scr_row, scr_col);
         tui_unlock();
         Element start_image = {
@@ -125,7 +125,7 @@ void game_run()
                 broad_row = 9;
                 broad_col = 9;
                 tui_lock();
-                wresize(stdscr, 15, 11);
+                resizeterm(15, 11);
                 getmaxyx(stdscr, scr_row, scr_col);
                 tui_unlock();
                 break;
@@ -135,7 +135,7 @@ void game_run()
                 broad_row = 16;
                 broad_col = 16;
                 tui_lock();
-                wresize(stdscr, 21, 18);
+                resizeterm(21, 18);
                 getmaxyx(stdscr, scr_row, scr_col);
                 tui_unlock();
                 break;
@@ -145,7 +145,7 @@ void game_run()
                 broad_row = 16;
                 broad_col = 30;
                 tui_lock();
-                wresize(stdscr, 21, 32);
+                resizeterm(21, 32);
                 getmaxyx(stdscr, scr_row, scr_col);
                 tui_unlock();
                 break;
