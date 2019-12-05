@@ -182,7 +182,7 @@ void game_run()
                 for (int j = 1; j < broad_col + 1 && mine_gen != 0; ++j)
                 {
                     if (broad[i][j] != '*' &&
-                        rand() % (broad_row * broad_col) < mine_n)
+                        rand() % (broad_row * broad_col) <= mine_gen)
                     {
                         broad[i][j] = '*';
                         --mine_gen;
